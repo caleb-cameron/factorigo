@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"path"
 
 	"github.com/karrick/golf"
 )
@@ -14,4 +15,6 @@ func main() {
 	createInstallDir()
 
 	log.Printf("Created install directory: %s", *installDir)
+	log.Print("Cloning factorio-init...")
+	cloneRepo("factorio-init", path.Join(*installDir, "factorio-init"))
 }
