@@ -4,7 +4,9 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"os"
+	"path"
 
 	"golang.org/x/sys/unix"
 )
@@ -13,6 +15,26 @@ const (
 	// rwxrwxr--
 	INSTALL_DIR_PERMS = 0774
 )
+
+var installDir *string
+
+func createInstallDir() {
+	var err error
+
+	if *installDir == "" {
+		workingDir, err := os.Getwd()
+		if err != nil {
+			log.Fatalf("Could not get working dir: %s", err)
+		}
+		*installDir = path.Join(workingDir, "factorio")
+	}
+
+	err = setupInstallDir(*installDir)
+
+	if err != nil {
+		log.Fatalf(fmt.Sprintf("Cannot setup install directory %s: %s", *installDir, err))
+	}
+}
 
 /*
 	First check if the dir already exists. If not, create it.
